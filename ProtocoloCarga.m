@@ -29,6 +29,7 @@ for i=1:numel(dirimages)
     names=names(3:end);
     for j=1:numel(names)
         im=imread(fullfile('RawImage',dirimages{i},names{j}));
+        im=preproccesing(im);
         if(strcmp(dirimages{i},'Test1Data')==1)
             imtrain1{j}=im;
         elseif(strcmp(dirimages{i},'Test2Data')==1)
@@ -72,7 +73,7 @@ for i=1:40
       bw2=or(bw2,anottrain2{j,i}); 
       bw3=or(bw3,anottest{j,i}); 
    end
-   ttrain1{i}=bw1;
-   ttrain2{i}=bw2;
-   ttest{i}=bw3;
+   ttrain1{i}=imfill(bw1,'holes');
+   ttrain2{i}=imfill(bw2,'holes');
+   ttest{i}=imfill(bw3,'holes');
 end
