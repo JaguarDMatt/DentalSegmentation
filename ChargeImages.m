@@ -1,6 +1,5 @@
-clc;
-clear all;
-
+function [ imtest,imtrain1,imtrain2,anottest, anottrain1,anottrain2,ttest,ttrain1,ttrain2] = ChargeImages( )
+%Charge the images
 addpath(genpath('GroundTruthData'));
 addpath(genpath('RawImage'));
 
@@ -29,13 +28,13 @@ for i=1:numel(dirimages)
     names=names(3:end);
     for j=1:numel(names)
         im=imread(fullfile('RawImage',dirimages{i},names{j}));
-        im=preproccesing(im);
+        im2=preproccesing(im);
         if(strcmp(dirimages{i},'Test1Data')==1)
-            imtrain1{j}=im;
+            imtrain1{j}=im2;
         elseif(strcmp(dirimages{i},'Test2Data')==1)
-            imtrain2{j}=im;
+            imtrain2{j}=im2;
         else
-            imtest{j}=im;
+            imtest{j}=im2;
         end
         name=names{j};
         name=name(1:end-4);
@@ -48,6 +47,7 @@ for i=1:numel(dirimages)
                 anot=imread(fullfile('GroundTruthData',diranot{i},namea));
             end
             anot=im2bw(anot);
+            anot=imresize(anot,[512 735]);
             if(strcmp(dirimages{i},'Test1Data')==1)
                 anottrain1{k,j}=anot;
             elseif(strcmp(dirimages{i},'Test2Data')==1)
@@ -73,7 +73,27 @@ for i=1:40
       bw2=or(bw2,anottrain2{j,i}); 
       bw3=or(bw3,anottest{j,i}); 
    end
-   ttrain1{i}=imfill(bw1,'holes');
-   ttrain2{i}=imfill(bw2,'holes');
-   ttest{i}=imfill(bw3,'holes');
+   ttrain1{i}=imresize(imfill(bw1,'holes'),[512 735]);
+   ttrain2{i}=imresize(imfill(bw2,'holes'),[512 735]);
+   ttest{i}=imresize(imfill(bw3,'holes'),[512 735]);
 end
+
+end
+
+function [ imout ] = preproccesing( imin )
+%Preproccesing
+
+%Take away color numbers
+dif1=imabsdiff(imin(:,:,1),imin(:,:,2));
+dif1=im2bw(dif1,graythresh(dif1));
+dif2=imabsdiff(imin(:,:,2),imin(:,:,3));
+dif2=im2bw(dif2,graythresh(dif2));
+dif3=imabsdiff(imin(:,:,1),imin(:,:,3));
+dif3=im2bw(dif3,graythresh(dif3));
+dif=or(or(dif1,dif2),dif3);
+imo=times(rgb2gray(imin),uint8(not(dif)));
+
+%Resize the image
+imout=imresize(imo,[512 735]);
+end
+
