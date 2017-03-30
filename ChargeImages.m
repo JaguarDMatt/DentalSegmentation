@@ -46,7 +46,15 @@ for i=1:numel(dirimages)
             else
                 anot=imread(fullfile('GroundTruthData',diranot{i},namea));
             end
-            anot=im2bw(anot);
+            sz=size(anot);
+            if(numel(sz)>2)
+                anot=rgb2gray(anot);
+            end
+            anot=im2bw(anot,graythresh(anot));
+            nanot=not(anot);
+            if(sum(anot(:))>sum(nanot(:)))
+               anot=nanot; 
+            end
             anot=imresize(anot,[512 735]);
             if(strcmp(dirimages{i},'Test1Data')==1)
                 anottrain1{k,j}=anot;
@@ -65,17 +73,17 @@ ttrain2=cell(1,40);
 ttest=cell(1,40);
 
 for i=1:40
-   bw1=anottrain1{1,i};
-   bw2=anottrain2{1,i};
-   bw3=anottest{1,i};
-   for j=2:7
-      bw1=or(bw1,anottrain1{j,i}); 
-      bw2=or(bw2,anottrain2{j,i}); 
-      bw3=or(bw3,anottest{j,i}); 
-   end
-   ttrain1{i}=imresize(imfill(bw1,'holes'),[512 735]);
-   ttrain2{i}=imresize(imfill(bw2,'holes'),[512 735]);
-   ttest{i}=imresize(imfill(bw3,'holes'),[512 735]);
+    bw1=anottrain1{1,i};
+    bw2=anottrain2{1,i};
+    bw3=anottest{1,i};
+    for j=2:7
+        bw1=or(bw1,anottrain1{j,i});
+        bw2=or(bw2,anottrain2{j,i});
+        bw3=or(bw3,anottest{j,i});
+    end
+    ttrain1{i}=imresize(imfill(bw1,'holes'),[512 735]);
+    ttrain2{i}=imresize(imfill(bw2,'holes'),[512 735]);
+    ttest{i}=imresize(imfill(bw3,'holes'),[512 735]);
 end
 
 end
