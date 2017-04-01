@@ -28,7 +28,7 @@ for i=1:numel(dirimages)
     names=names(3:end);
     for j=1:numel(names)
         im=imread(fullfile('RawImage',dirimages{i},names{j}));
-        im2=preproccesing(im);
+        [im2,do]=preproccesing(im);
         if(strcmp(dirimages{i},'Test1Data')==1)
             imtrain1{j}=im2;
         elseif(strcmp(dirimages{i},'Test2Data')==1)
@@ -46,16 +46,13 @@ for i=1:numel(dirimages)
             else
                 anot=imread(fullfile('GroundTruthData',diranot{i},namea));
             end
-            sz=size(anot);
-            if(numel(sz)>2)
-                anot=rgb2gray(anot);
-            end
+            
+            anot=preproccesing(anot,do);
             anot=im2bw(anot,graythresh(anot));
             nanot=not(anot);
             if(sum(anot(:))>sum(nanot(:)))
-               anot=nanot; 
+                anot=nanot;
             end
-            anot=imresize(anot,[512 735]);
             if(strcmp(dirimages{i},'Test1Data')==1)
                 anottrain1{k,j}=anot;
             elseif(strcmp(dirimages{i},'Test2Data')==1)
@@ -88,20 +85,39 @@ end
 
 end
 
-function [ imout ] = preproccesing( imin )
+function [ imout,do] = preproccesing( varargin )
 %Preproccesing
+imin=varargin{1};
+sz=size(imin);
+if(numel(sz)==3)
+    %Take away color numbers
+    dif1=imabsdiff(imin(:,:,1),imin(:,:,2));
+    dif1=im2bw(dif1,graythresh(dif1));
+    dif2=imabsdiff(imin(:,:,2),imin(:,:,3));
+    dif2=im2bw(dif2,graythresh(dif2));
+    dif3=imabsdiff(imin(:,:,1),imin(:,:,3));
+    dif3=im2bw(dif3,graythresh(dif3));
+    dif=or(or(dif1,dif2),dif3);
+    imin=times(rgb2gray(imin),uint8(not(dif)));
+end
 
-%Take away color numbers
-dif1=imabsdiff(imin(:,:,1),imin(:,:,2));
-dif1=im2bw(dif1,graythresh(dif1));
-dif2=imabsdiff(imin(:,:,2),imin(:,:,3));
-dif2=im2bw(dif2,graythresh(dif2));
-dif3=imabsdiff(imin(:,:,1),imin(:,:,3));
-dif3=im2bw(dif3,graythresh(dif3));
-dif=or(or(dif1,dif2),dif3);
-imo=times(rgb2gray(imin),uint8(not(dif)));
+
+%Rotate Image
+if(nargin==1)
+    bw=im2bw(imin,graythresh(imin));
+    a=regionprops(not(bw),'Orientation');
+    as=extractfield(a,'Orientation');
+    do=-as(1);
+    imo=imrotate(imin,do,'bilinear','crop');
+else
+    di=varargin{2};
+    imo=imrotate(imin,di,'bilinear','crop');
+    do=di;
+end
 
 %Resize the image
 imout=imresize(imo,[512 735]);
+
+
 end
 
