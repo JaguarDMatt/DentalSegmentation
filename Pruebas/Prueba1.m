@@ -14,17 +14,20 @@ I1=imread(imtrain{1});
 szo=[512 735];
 I=prepro(I1,szo);
 [ Mat,lab ] = TeethAnnot( anottrain(:,1),szo);
-
-%% HOG
-[hog1,visualization] = extractHOGFeatures(I1,'CellSize',[1 1]);
+I2=uint8(Mat).*I;
 
 %%
-NumBins=9;
-CellSize=[1 1];
-BlockSize=[3 3];
-BlockOverlap=ceil(BlockSize/2);
-BlocksPerImage = floor((size(I1)./CellSize - BlockSize)./(BlockSize - BlockOverlap) + 1);
-%%
-plot(visualization);
+run('vlfeat/toolbox/vl_setup')
 
-F = getframe;
+%%
+cellSize = 2;
+hog = vl_hog(im2single(I), cellSize,'numOrientations', 9) ;
+imhog = vl_hog('render', hog,'numOrientations', 9) ;
+
+%%
+
+imhog1=imresize(imhog,szo);
+
+%%
+
+imhog2=uint8(imhog1*255/max(imhog1(:)));
