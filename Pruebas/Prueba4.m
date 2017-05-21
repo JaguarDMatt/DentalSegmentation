@@ -2,7 +2,8 @@
 
 % Deteccion dientes (0.6271)
 %Con filtro mediano  y 1000 iter (0.6264)
-%Con filtro mediano  y 1mascara de Otsu(0.6518)
+%Con filtro mediano  y 1 mascara de Otsu(0.6518)
+%Con filtro mediano  y 1 mascara de Otsu dilatada(0.6671)
 
 clc;
 clear all;
@@ -21,7 +22,7 @@ I=prepro(I1,szo);
 [ Mat,lab ] = TeethAnnot( anottest(:,i),szo);
 gray=rgb2gray(I1);
 mask=im2bw(I,graythresh(I));
-mask=imdilate(mask,strel('disk',20));
+mask=imdilate(mask,strel('sphere',20));
 Seg=chenvese(I,mask,1000,0.2,'vector');
 Seg1=imresize(Seg,szo);
 a=Mat;
