@@ -1,6 +1,8 @@
 %Prueba 4 con Active Contour
 
-% Deteccion dientes
+% Deteccion dientes (0.6271)
+%Con filtro mediano  y 1000 iter (0.6264)
+%Con filtro mediano  y 1mascara de Otsu(0.6518)
 
 clc;
 clear all;
@@ -18,8 +20,9 @@ I1=imread(imtest{i});
 I=prepro(I1,szo);
 [ Mat,lab ] = TeethAnnot( anottest(:,i),szo);
 gray=rgb2gray(I1);
-mask=imresize(gray~=0,szo);
-Seg=chenvese(I,mask,800,0.2,'vector');
+mask=im2bw(I,graythresh(I));
+mask=imdilate(mask,strel('disk',20));
+Seg=chenvese(I,mask,1000,0.2,'vector');
 Seg1=imresize(Seg,szo);
 a=Mat;
 b=Seg1;

@@ -1,4 +1,4 @@
-function [ imout] = prepro( imin,varargin )
+function [ imout] = preprobasic( imin,varargin )
 %Preproccesing
 sz=size(imin);
 
@@ -14,11 +14,8 @@ if(numel(sz)==3)
     imin=times(rgb2gray(imin),uint8(not(dif)));
 end
 
-%Contrast-limited adaptive histogram equalization
-imin = adapthisteq(imin);
-
-%Gamma correction
-imin = imadjust(imin,[],[],0.5);
+%Median Filter
+imin = medfilt2(imin,[9 9]);
 
 %Resize the image
 if(nargin>1)

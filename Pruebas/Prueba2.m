@@ -1,6 +1,7 @@
 %Prueba 2 con Fuzzy C Means
 
 % Deteccion dientes (0.648)
+% con filtro mediano(0.6516)
 
 clc;
 clear all;

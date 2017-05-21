@@ -14,6 +14,9 @@ if(numel(sz)==3)
     imin=times(rgb2gray(imin),uint8(not(dif)));
 end
 
+%Median Filter
+imin = medfilt2(imin,[9 9]);
+
 %Contrast-limited adaptive histogram equalization
 imin = adapthisteq(imin);
 

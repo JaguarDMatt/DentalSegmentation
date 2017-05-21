@@ -1,6 +1,7 @@
 %Prueba 7 con Fuzzy C Means y sin cambio de tamaño de imagen
 
 % Deteccion dientes (0.648)
+% Con filtro mediano (0.651)
 
 clc;
 clear all;
