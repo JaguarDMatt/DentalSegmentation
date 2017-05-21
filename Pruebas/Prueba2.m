@@ -11,12 +11,12 @@ addpath(genpath('Fast_C__and_Fuzzy_C_Means'));
 
 szo=[512 735];
 c=2;
-jaccard=zeros(size(imtrain));
+jaccard=zeros(size(imtest));
 
-for i=1:numel(imtrain)
-I1=imread(imtrain{i});
+for i=1:numel(imtest)
+I1=imread(imtest{i});
 I=prepro(I1,szo);
-[ Mat,lab ] = TeethAnnot( anottrain(:,i),szo);
+[ Mat,lab ] = TeethAnnot( anottest(:,i),szo);
 [L,C,U,LUT,H]=FastFCMeans(I,c);
 a=Mat;
 b=L==2;
