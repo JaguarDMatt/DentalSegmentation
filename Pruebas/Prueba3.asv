@@ -20,7 +20,7 @@ end
 
 %%
 histof=cell2mat(histo);
-histof=mean(histof);
+%histof=mean(histof);
 
 %%
 

@@ -1,26 +1,29 @@
-%Prueba 2 con Fuzzy C Means
+%Prueba 5 con Active Contour y tamaños desiguales
 
-% Deteccion dientes (0.648)
+% Deteccion dientes (0.6271)
 
 clc;
 clear all;
 [imtrain,anottrain,imtest,anottest] = ImagesDir( );
-addpath(genpath('Fast_C__and_Fuzzy_C_Means'));
+addpath(genpath('Chan-Vese'));
 
 %%
-
-szo=[512 735];
 c=2;
 jaccard=zeros(size(imtest));
 
 for i=1:numel(imtest)
 I1=imread(imtest{i});
+gray=rgb2gray(I1);
+szo=size(gray);
 I=prepro(I1,szo);
 [ Mat,lab ] = TeethAnnot( anottest(:,i),szo);
-[L,C,U,LUT,H]=FastFCMeans(I,c);
+mask=gray~=0;
+Seg=chenvese(I,mask,800,0.2,'vector');
+Seg1=imresize(Seg,szo);
 a=Mat;
-b=L==2;
+b=Seg1;
 inter_image = a & b;
 union_image = a | b;
 jaccard(i)= sum(inter_image(:))/sum(union_image(:));
+close
 end
