@@ -14,6 +14,12 @@ if(numel(sz)==3)
     imin=times(rgb2gray(imin),uint8(not(dif)));
 end
 
+%Contrast-limited adaptive histogram equalization
+imin = adapthisteq(imin);
+
+%Gamma correction
+imin = imadjust(imin,[],[],0.5);
+
 %Resize the image
 imout=imresize(imin,szout);
 end
