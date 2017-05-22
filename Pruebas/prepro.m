@@ -15,7 +15,12 @@ if(numel(sz)==3)
 end
 
 %Median Filter
-imin = medfilt2(imin,[9 9]);
+if(nargin>2)
+    w=varargin{2};
+else
+    w=[9 9];
+end
+imin = medfilt2(imin,w);
 
 %Contrast-limited adaptive histogram equalization
 imin = adapthisteq(imin);

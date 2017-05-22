@@ -15,7 +15,7 @@ if(numel(sz)==3)
 end
 
 %Median Filter
-imin = medfilt2(imin,[9 9]);
+% imin = medfilt2(imin,[9 9]);
 
 %Resize the image
 if(nargin>1)

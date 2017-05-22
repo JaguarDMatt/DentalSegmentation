@@ -7,11 +7,15 @@ clear all;
 [imtrain,anottrain,imtest,anottest] = ImagesDir( );
 
 %%
-I1=imread(imtrain{1});
-I=prepro(I1);
-[ Mat,lab ] = TeethAnnot( anottrain(:,1));
-[L,NumLabels] = superpixels(I,100);
-%%
 
-BW = boundarymask(L);
-imshow(imoverlay(I,BW,'cyan'),'InitialMagnification',67)
+szo=[512 735];
+Mats=zeros([szo numel(imtrain)],'uint8');
+for i=1:numel(imtrain)
+I1=imread(imtrain{i});
+I=prepro(I1,szo);
+[ Mat,lab ] = TeethAnnot( anottrain(:,i),szo);
+Mats(:,:,i)=Mat;
+end
+
+mean=uint8(mean(Mats,3)*255);
+%%

@@ -1,0 +1,1 @@
+1) Extraccion dientes: An Effective Shape Extraction Algorithm for Dental Radiographs using Contour Information
