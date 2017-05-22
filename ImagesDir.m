@@ -46,9 +46,9 @@ for i=1:numel(dirimages)
                 anot=fullfile('GroundTruthData',diranot{i},namea);
             end
             
-            if(strcmp(dirimages{i},'Test1Data')==1)
+            if(strcmp(diranot{i},'Test1')==1)
                 anottest{k,j}=anot;
-            elseif(strcmp(dirimages{i},'Test2Data')==1)
+            elseif(strcmp(diranot{i},'Test2')==1)
                 anotval{k,j}=anot;
             else
                 anottrain{k,j}=anot;

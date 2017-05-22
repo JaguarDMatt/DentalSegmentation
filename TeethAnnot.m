@@ -1,4 +1,4 @@
-function [ Mat,lab ] = TeethAnnot( anots,sz)
+function [ Mat,lab ] = TeethAnnot( anots,varargin)
 %Combine annotations to a global annotation binary matrix and a label
 %matrix
 
@@ -7,7 +7,13 @@ I1=imread(anots{1});
 if(numel(size(I1))==3)
     I1=rgb2gray(I1);
 end
-I1=imresize(I1,sz);
+
+if(nargin>1)
+    sz=varargin{1};
+    I1=imresize(I1,sz);
+else
+    sz=size(I1);
+end
 
 %Binary image
 bw=im2bw(I1,graythresh(I1));
