@@ -1,6 +1,5 @@
 %Prueba 12
 
-
 clc;
 clear all;
 [imtrain,anottrain,imtest,anottest] = ImagesDir( );
@@ -18,7 +17,7 @@ I2=uint8(Mat).*I;
 
 d=1;
 order=6;
-im=double(preprobasic(I1));
+im=double(I);
 [r c]=size(im);
-
-im2=homofil(im,d,r,c,order);
+%%
+[im2,imn]=homofil(im,d,r,c,order);

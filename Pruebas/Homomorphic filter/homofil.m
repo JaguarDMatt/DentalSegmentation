@@ -1,4 +1,4 @@
-function im_e=homofil(im,d,r,c,n)
+function [im_e,im_n]=homofil(im,d,r,c,n)
 %%%%%%%%%%Butterworth high pass filter %%%%%%%%%%%%%%
 A=zeros(r,c);
 for i=1:r
@@ -24,9 +24,7 @@ im_nf=H.*im_f;
 im_n=abs(ifft2(im_nf));
 %%%%%Inverse log 
 im_e=exp(im_n);
-% subplot(1,2,2);
-subplot(122)
-imshow((im_e),[])
+
 
 % figure
 % imshow(H)
