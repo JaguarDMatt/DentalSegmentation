@@ -49,6 +49,30 @@ figure;
 newim=rgb2gray(I1).*uint8(not(fullmask));
 imshow(newim);
 %%
+gray=rgb2gray(I1);
+roi=not(fullmask);
+[Gmag,Gdir] = imgradient(gray);
+intensity=gray(roi);
+labels=lab(roi);
+grad=Gmag(roi);
+dir=Gdir(roi);
+
+data=horzcat(intensity,grad,dir);
+
+%%
+
+B = TreeBagger(25,double(data),labels);
+
+%%
+
+labelpre = predict(B,double(data));
+cell=cell2mat(labelpre);
+labelpre=str2num(cell);
+
+%%
+lgray=zeros(size(fullmask),'uint8');
+lgray(roi)=uint8(labelpre);
+%%
 %Median Filter
 imin=newim;
 w=[6 6];
