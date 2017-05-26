@@ -4,29 +4,26 @@ clear all;
 [imtrain,anottrain,imtest,anottest] = ImagesDir( );
 %%
 
-i=2;
+i=5;
 I1=imread(imtrain{i});
 szo=[512 735];
 [ Mat,lab ] = TeethAnnot( anottrain(:,i));
 
 %%
 [I,mask]=prepro2(I1);
-BW2 = imfill(not(mask),'holes');
-stats = regionprops(BW2,'Orientation');
-ori=stats.Orientation;
-im3=imrotate(I,-ori,'bicubic','crop');
+[I2,fullmask,ori]=preprorot(I1);
+
 %%
-Mat2=imrotate(Mat,-ori,'bicubic','crop');
-%%
-lab2=imrotate(lab,-ori,'nearest','crop');
+
+
 %%
 
 bw=imbinarize(I);
 bw2=chenvese(I,not(bw)|mask,1000,0.2,'vector');
 %%
-Ix=sum(I,1);
+Ix=sum(I2,1);
 Ix=Ix/max(Ix);
-Iy=sum(I,2);
+Iy=sum(I2,2);
 Iy=Iy/max(Iy);
 %%
 [pksx,loksx]=findpeaks(1-Iy,'MinPeakDistance',round(numel(Iy)/3));
@@ -34,12 +31,12 @@ Iy=Iy/max(Iy);
 
 
 %%
-Imx=I;
+Imx=I2;
 Imx(loksx,:)=255;
 imshow(Imx);
 
 figure;
-Imy=I;
+Imy=I2;
 Imy(:,loksy)=255;
 imshow(Imy);
 %%

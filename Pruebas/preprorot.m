@@ -1,4 +1,4 @@
-function [ imout,fullmask ] = preprorot( imin )
+function [ imout,fullmask,ori ] = preprorot( imin )
 % Preprocessing
 
 S = sum(imin,3);
@@ -31,15 +31,18 @@ dif=dif1 | dif2| dif3;
 fullmask=mask|dif;
 newim=rgb2gray(imin).*uint8(not(fullmask));
 
-%Rotation
+%Rotation & Inward Interpolation
 BW2 = imfill(not(fullmask),'holes');
+num=xor(BW2,not(fullmask));
+num2=imdilate(num,strel('sphere',2));
+newim2=regionfill(newim,num2);
 stats = regionprops(BW2,'Orientation');
 ori=stats.Orientation;
-newim=imrotate(newim,-ori(1),'bicubic','crop');
+newim=imrotate(newim2,-ori(1),'bicubic','crop');
+fullmask=imrotate(fullmask,-ori(1),'bicubic','crop');
 
 %Median Filter
-w=[6 6];
-imfil = medfilt2(newim,w);
+imfil = medfilt2(newim);
 
 %Contrast-limited adaptive histogram equalization
 imout= adapthisteq(imfil,'Distribution','rayleigh');
