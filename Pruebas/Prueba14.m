@@ -17,6 +17,13 @@ imshow(I1)
 
 imshowpair(I1,I2,'montage');
 %%
+features = extractLBPFeatures(I2);
+
+%%
+[featureVector,hogVisualization] = extractHOGFeatures(I2);
+%%
+
+
 bw=imbinarize(I2);
 %%
 bw2=chenvese(I2,Imy,1000,0.2,'chan');
