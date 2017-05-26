@@ -8,11 +8,20 @@ if(numel(size(I1))==3)
     I1=rgb2gray(I1);
 end
 
+%Resize
 if(nargin>1)
     sz=varargin{1};
     I1=imresize(I1,sz);
 else
     sz=size(I1);
+end
+
+%Rotate
+if(nargin>2)
+    ori=varargin{2};
+    I1=imrotate(I1,-ori(1),'bicubic','crop');;
+else
+    ori=0;
 end
 
 %Binary image
@@ -31,6 +40,7 @@ for i=2:numel(anots)
         Ii=rgb2gray(Ii);
     end
     Ii=imresize(Ii,sz);
+    Ii=imrotate(Ii,-ori(1),'bicubic','crop');
     bwi=im2bw(Ii,graythresh(Ii));
     nbwi=not(bwi);
     if(sum(bwi(:))>sum(nbwi(:)))

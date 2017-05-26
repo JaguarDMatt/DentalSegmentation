@@ -32,6 +32,12 @@ fullmask=mask|dif;
 
 newim=rgb2gray(imin).*uint8(not(fullmask));
 
+%Inward interpolation
+BW2 = imfill(not(fullmask),'holes');
+num=xor(BW2,not(fullmask));
+num2=imdilate(num,strel('sphere',2));
+newim=regionfill(newim,num2);
+
 %Median Filter
 w=[6 6];
 imfil = medfilt2(newim,w);

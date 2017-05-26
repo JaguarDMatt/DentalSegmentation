@@ -1,4 +1,4 @@
-function [ imout,fullmask,ori ] = preprorot( imin )
+function [ imout,BW2,ori ] = preprorot( imin )
 % Preprocessing
 
 S = sum(imin,3);
@@ -42,7 +42,7 @@ newim=imrotate(newim2,-ori(1),'bicubic','crop');
 fullmask=imrotate(fullmask,-ori(1),'bicubic','crop');
 
 %Median Filter
-imfil = medfilt2(newim);
+imfil = medfilt2(newim,[6 6]);
 
 %Contrast-limited adaptive histogram equalization
 imout= adapthisteq(imfil,'Distribution','rayleigh');
