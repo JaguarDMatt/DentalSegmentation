@@ -1,6 +1,5 @@
 function [ imout,fullmask ] = prepro2( imin )
 % Preprocessing
-
 S = sum(imin,3);
 
 %Find brighter parts

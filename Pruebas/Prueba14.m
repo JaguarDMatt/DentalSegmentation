@@ -1,14 +1,12 @@
-
 clc;
 clear all;
 [imtrain,anottrain,imtest,anottest] = ImagesDir( );
 %%
-
 i=10;
 I1=imread(imtrain{i});
 szo=[512 735];
-[ Mat,lab ] = TeethAnnot( anottrain(:,i));
-imshow(I1)
+[Mat,lab] = TeethAnnot( anottrain(:,i));
+imshow(I1);
 
 %%
 [I,mask]=prepro2(I1);
