@@ -19,7 +19,7 @@ end
 %Rotate
 if(nargin>2)
     ori=varargin{2};
-    I1=imrotate(I1,-ori(1),'bicubic','crop');;
+    I1=imrotate(I1,-ori(1),'nearest','crop');
 else
     ori=0;
 end
@@ -40,13 +40,13 @@ for i=2:numel(anots)
         Ii=rgb2gray(Ii);
     end
     Ii=imresize(Ii,sz);
-    Ii=imrotate(Ii,-ori(1),'bicubic','crop');
     bwi=im2bw(Ii,graythresh(Ii));
     nbwi=not(bwi);
     if(sum(bwi(:))>sum(nbwi(:)))
         bwi=nbwi;
     end
-    lbl=lbl+(uint8(bwi)*i);
+    bwi=imrotate(bwi,-ori(1),'nearest','crop');
+    lbl=lbl+(uint8(and(bwi,lbl==0))*i);
     bw=or(bw,bwi);
 end
 

@@ -2,7 +2,7 @@ clc;
 clear all;
 [imtrain,anottrain,imtest,anottest] = ImagesDir( );
 %%
-i=10;
+i=11;
 I1=imread(imtrain{i});
 szo=[512 735];
 [Mat,lab] = TeethAnnot( anottrain(:,i));
