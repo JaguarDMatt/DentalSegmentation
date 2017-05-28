@@ -12,7 +12,7 @@ esta posicion queremos la imagen. Para buscar el angulo que maximice el
 umbral de Otsu se itera sobre un rango de angulos y se escoge aquel con
 mayor metrica de efectividad.
 %}
-function rotatedIm = RotateIm(im)
+function [rotatedIm,levelMax] = RotateIm(im)
 % Si la entrada es la ruta de la imagen, leerla
 if ischar(im)
     nameIm = strsplit(im,'/');
@@ -38,6 +38,7 @@ ndeg = 5; % Cantidad de angulos a probar
 while deg1 - deg0 > error
     degs = linspace(deg0, deg1, ndeg);
     ems = zeros(1, ndeg);
+    levels = zeros(1, ndeg);
     for i = 1:ndeg
 %         bw2 = imrotate(bw, degs(i), 'nearest', 'crop');
 %         counts = sum(bw2,2);
@@ -46,14 +47,16 @@ while deg1 - deg0 > error
         counts = sum(gray2,2);
         nz = sum(gray2 ~= 0,2);
         counts2 = counts ./ nz;
-        ems(i) = calculateEM(counts2);
+        [ems(i),levels(i)] = calculateEM(counts2);
     end
     [~,posMax] = max(ems);
     deg0 = degs(max(1, posMax - 1));
     deg1 = degs(min(ndeg, posMax + 1));
 end
 rotatedIm = imrotate(im, degs(posMax), 'nearest', 'crop');
+levelMax = levels(posMax);
 fprintf('Angulo de rotacion = %f\n',degs(posMax));
+fprintf('Umbral de corte encontrado = %f\n',levels(posMax));
 fprintf('Metrica de efectividad = %f\n',ems(posMax));
 % figure
 % counts = sum(imrotate(bw, degs(posMax), 'nearest', 'crop'), 2);
@@ -69,7 +72,7 @@ fprintf('Metrica de efectividad = %f\n',ems(posMax));
 end
 
 % Algoritmo obtenido de: graythresh.m
-function em = calculateEM(counts)
+function [em,level] = calculateEM(counts)
 num_bins = length(counts);
 p = counts / sum(counts);
 omega = cumsum(p);
@@ -77,6 +80,9 @@ mu = cumsum(p .* (1:num_bins)');
 mu_t = mu(end);
 sigma_b_squared = (mu_t * omega - mu).^2 ./ (omega .* (1 - omega));
 maxval = max(sigma_b_squared);
+% compute threshold
+idx = mean(find(sigma_b_squared == maxval));
+level = (idx - 1) / (num_bins - 1);
 % compute the effectiveness metric
 em = maxval/(sum(p.*((1:num_bins).^2)') - mu_t^2);
 end
