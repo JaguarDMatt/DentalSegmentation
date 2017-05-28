@@ -8,12 +8,9 @@ clc;
 clear all;
 [imtrain,anottrain,imtest,anottest] = ImagesDir( );
 
-%%
-
 I1=imread(imtrain{1});
-szo=[512 735];
-I=prepro(I1,szo);
-[ Mat,lab ] = TeethAnnot( anottrain(:,1),szo);
+[I,mask,ori]=preprorot(I1);
+[ Mat,lab ] = TeethAnnot( anottrain(:,1),size(I),ori);
 I2=uint8(Mat).*I;
 
 %%

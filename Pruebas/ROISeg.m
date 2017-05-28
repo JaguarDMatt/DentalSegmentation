@@ -1,11 +1,13 @@
 function [ SegF ] = ROISeg( I1,varargin )
 %ROI Segmentation 
 %   JI:66,7%
+addpath(genpath('Chan-Vese'));
+
 if(nargin>1)
     szo=varargin{1};
-    I=prepro(I1,szo);
+    I=preprorot(I1,szo);
 else
-     I=prepro(I1);
+     I=preprorot(I1);
      szo=size(I);
 end
 mask=im2bw(I,graythresh(I));

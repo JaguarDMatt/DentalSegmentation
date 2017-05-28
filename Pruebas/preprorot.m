@@ -1,4 +1,4 @@
-function [ imout,BW2,ori ] = preprorot( imin )
+function [ imout,BW2,ori ] = preprorot( imin, varargin)
 % Preprocessing
 
 S = sum(imin,3);
@@ -39,13 +39,19 @@ newim2=regionfill(newim,num2);
 stats = regionprops(BW2,'Orientation');
 ori=stats.Orientation;
 newim=imrotate(newim2,-ori(1),'bicubic','crop');
-fullmask=imrotate(fullmask,-ori(1),'bicubic','crop');
+BW2=imrotate(BW2,-ori(1),'bicubic','crop');
 
 %Median Filter
 imfil = medfilt2(newim,[6 6]);
 
 %Contrast-limited adaptive histogram equalization
 imout= adapthisteq(imfil,'Distribution','rayleigh');
+
+%Resize the image
+if(nargin>1)
+    szout=varargin{1};
+    imout=imresize(imout,szout);
+end
 
 end
 
